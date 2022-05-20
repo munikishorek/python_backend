@@ -1,0 +1,26 @@
+version: "2.2"
+
+volumes:
+  database: {}
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=raybaby
+      - POSTGRES_USER=rohit
+      - POSTGRES_DB=qr_codes  
+    volumes:
+      - database:/var/lib/postgresql/data
+      - ./create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+  backend: 
+    build: .
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
